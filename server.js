@@ -34,10 +34,14 @@ app.post("/check", upload.single("photo"), async (req, res) => {
       { type: req.file.mimetype }
     );
 
-    formData.append("image", blob, req.file.originalname);
+    formData.append(
+      "image",
+      blob,
+      req.file.originalname
+    );
 
     const response = await fetch(
-      "https://api.aiornot.com/v2/check",
+      "https://api.aiornot.com/v2/image/sync",
       {
         method: "POST",
         headers: {
