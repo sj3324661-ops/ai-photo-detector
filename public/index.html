@@ -11,7 +11,7 @@
 
   <title>AI Photo Detector</title>
 
-  <!-- Logo -->
+  <!-- App Logo -->
   <link
     rel="icon"
     type="image/png"
@@ -31,72 +31,126 @@
 
   <style>
 
-    body {
-      background-color: lightblue;
-      font-family: Arial, sans-serif;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      min-height: 100vh;
-      margin: 0;
-    }
-
-    .card {
-      background-color: white;
-
-      width: 90%;
-      max-width: 400px;
-
-      padding: 20px;
-
-      border-radius: 15px;
-
-      text-align: center;
-
+    * {
       box-sizing: border-box;
     }
 
-    .logo {
-      width: 90px;
-      height: 90px;
+    body {
+      margin: 0;
+      min-height: 100vh;
 
-      object-fit: cover;
+      font-family: Arial, sans-serif;
+
+      background: lightblue;
+
+      transition: 0.3s;
+    }
+
+    body.dark {
+      background: #121212;
+      color: white;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 500px;
+
+      margin: auto;
+
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+
+    header {
+      background: blue;
+      color: white;
+
+      padding: 15px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .theme-button {
+      background: white;
+      color: black;
+
+      border: none;
+      border-radius: 50%;
+
+      width: 40px;
+      height: 40px;
+
+      font-size: 18px;
+    }
+
+    /* PAGES */
+
+    .page {
+      display: none;
+      padding: 20px;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* HOME */
+
+    .home-card {
+      background: white;
 
       border-radius: 20px;
 
-      margin-bottom: 10px;
+      padding: 25px;
+
+      text-align: center;
+
+      margin-top: 30px;
+
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
     }
 
-    h1 {
+    body.dark .home-card,
+    body.dark .card {
+      background: #1e1e1e;
+      color: white;
+    }
+
+    .big-logo {
+      width: 110px;
+      height: 110px;
+
+      border-radius: 25px;
+
+      object-fit: cover;
+
+      margin-bottom: 15px;
+    }
+
+    .home-card h1 {
       color: red;
+
+      font-size: 28px;
     }
 
-    input {
-      margin: 15px 0;
-      width: 100%;
+    .home-card p {
+      line-height: 1.5;
     }
 
-    #preview {
-      max-width: 100%;
-      max-height: 250px;
-
-      border-radius: 10px;
-
-      display: none;
-
-      margin: 15px auto;
-    }
+    /* BUTTONS */
 
     button {
-      background-color: blue;
-
-      color: white;
-
       border: none;
 
-      padding: 12px 20px;
+      padding: 12px 18px;
 
       border-radius: 10px;
 
@@ -107,46 +161,206 @@
       margin: 5px;
     }
 
-    button:disabled {
-      background-color: gray;
-      cursor: not-allowed;
+    .primary {
+      background: blue;
+      color: white;
     }
 
-    #installButton {
+    .green {
+      background: green;
+      color: white;
+    }
+
+    .red {
+      background: red;
+      color: white;
+    }
+
+    .gray {
+      background: gray;
+      color: white;
+    }
+
+    /* DETECTOR */
+
+    .card {
+      background: white;
+
+      border-radius: 20px;
+
+      padding: 20px;
+
+      text-align: center;
+
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    }
+
+    input[type="file"] {
+      width: 100%;
+
+      margin: 15px 0;
+    }
+
+    #preview {
       display: none;
-      background-color: green;
+
+      max-width: 100%;
+      max-height: 280px;
+
+      margin: 15px auto;
+
+      border-radius: 15px;
     }
 
     #result {
-      margin-top: 15px;
+      margin-top: 20px;
 
-      padding: 15px;
+      padding: 18px;
 
-      border-radius: 10px;
+      border-radius: 15px;
 
-      background-color: #eeeeee;
+      background: #eeeeee;
 
-      font-size: 18px;
+      font-size: 20px;
     }
 
     .real {
-      background-color: #d9ffd9;
+      background: #d9ffd9 !important;
       color: green;
     }
 
     .ai {
-      background-color: #ffd9d9;
+      background: #ffd9d9 !important;
       color: red;
     }
 
     .uncertain {
-      background-color: #fff3cd;
+      background: #fff3cd !important;
       color: #856404;
     }
 
+    /* CONFIDENCE */
+
     .confidence {
+      margin-top: 12px;
+
       font-size: 15px;
+    }
+
+    .bar {
+      width: 100%;
+
+      height: 15px;
+
+      background: #ddd;
+
+      border-radius: 20px;
+
+      overflow: hidden;
+
       margin-top: 8px;
+    }
+
+    #confidenceBar {
+      width: 0%;
+
+      height: 100%;
+
+      background: blue;
+
+      transition: width 0.5s;
+    }
+
+    /* HISTORY */
+
+    .history-item {
+      background: white;
+
+      padding: 15px;
+
+      margin: 10px 0;
+
+      border-radius: 12px;
+
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    body.dark .history-item {
+      background: #1e1e1e;
+      color: white;
+    }
+
+    .history-item small {
+      display: block;
+
+      margin-top: 5px;
+    }
+
+    /* NOTICE */
+
+    .notice {
+      background: #fff3cd;
+
+      color: #856404;
+
+      padding: 15px;
+
+      border-radius: 12px;
+
+      margin-top: 15px;
+
+      line-height: 1.5;
+    }
+
+    /* NAVIGATION */
+
+    nav {
+      position: fixed;
+
+      bottom: 0;
+
+      left: 0;
+      right: 0;
+
+      background: white;
+
+      border-top: 1px solid #ddd;
+
+      display: flex;
+
+      justify-content: center;
+
+      padding: 8px;
+
+      z-index: 10;
+    }
+
+    body.dark nav {
+      background: #1e1e1e;
+    }
+
+    nav button {
+      background: transparent;
+
+      color: blue;
+
+      font-size: 14px;
+
+      margin: 0 3px;
+    }
+
+    body.dark nav button {
+      color: white;
+    }
+
+    /* INSTALL */
+
+    #installButton {
+      display: none;
+    }
+
+    .center {
+      text-align: center;
     }
 
   </style>
@@ -156,72 +370,318 @@
 
 <body>
 
-  <div class="card">
+  <div class="app">
 
-    <!-- App Logo -->
+    <!-- HEADER -->
 
-    <img
-      class="logo"
-      src="/icon.png"
-      alt="AI Photo Detector Logo"
+    <header>
+
+      <h2 id="headerTitle">
+        AI Photo Detector
+      </h2>
+
+      <button
+        class="theme-button"
+        onclick="toggleDarkMode()"
+      >
+        🌙
+      </button>
+
+    </header>
+
+
+    <!-- =====================
+         HOME PAGE
+         ===================== -->
+
+    <section
+      id="homePage"
+      class="page active"
     >
 
+      <div class="home-card">
 
-    <h1>
-      AI Photo Detector
-    </h1>
+        <img
+          src="/icon.png"
+          class="big-logo"
+          alt="AI Photo Detector"
+        >
+
+        <h1>
+          AI Photo Detector
+        </h1>
+
+        <p id="homeText">
+          पता करें कि कोई photo AI-generated है
+          या likely real.
+        </p>
+
+        <button
+          class="primary"
+          onclick="showPage('checkPage')"
+        >
+          📷 Check Photo
+        </button>
+
+        <button
+          class="green"
+          id="installButton"
+          onclick="installApp()"
+        >
+          📲 Install App
+        </button>
+
+        <div class="notice">
+
+          ⚠️ <b>Important:</b><br>
+
+          यह detector probability के आधार पर
+          result देता है। कोई result 100% proof
+          नहीं है।
+
+        </div>
+
+      </div>
+
+    </section>
 
 
-    <!-- Photo Select -->
+    <!-- =====================
+         CHECK PAGE
+         ===================== -->
 
-    <input
-      type="file"
-      id="photo"
-      accept="image/*"
+    <section
+      id="checkPage"
+      class="page"
     >
 
+      <div class="card">
 
-    <!-- Photo Preview -->
+        <h2>
+          📷 Check Photo
+        </h2>
 
-    <img
-      id="preview"
-      alt="Photo Preview"
+        <input
+          type="file"
+          id="photo"
+          accept="image/*"
+        >
+
+        <img
+          id="preview"
+          alt="Photo Preview"
+        >
+
+        <br>
+
+        <button
+          id="checkButton"
+          class="primary"
+          onclick="checkPhoto()"
+        >
+          Check Photo
+        </button>
+
+        <button
+          class="gray"
+          onclick="clearPhoto()"
+        >
+          Clear
+        </button>
+
+        <div id="result">
+          Result यहाँ आएगा
+        </div>
+
+        <div
+          class="confidence"
+          id="confidenceBox"
+          style="display:none;"
+        >
+
+          Confidence
+
+          <div class="bar">
+
+            <div id="confidenceBar"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================
+         HISTORY PAGE
+         ===================== -->
+
+    <section
+      id="historyPage"
+      class="page"
     >
 
+      <div class="card">
 
-    <br>
+        <h2>
+          📜 History
+        </h2>
+
+        <div id="historyList">
+          कोई history नहीं है।
+        </div>
+
+        <button
+          class="red"
+          onclick="clearHistory()"
+        >
+          🗑️ Clear History
+        </button>
+
+      </div>
+
+    </section>
 
 
-    <!-- Check Button -->
+    <!-- =====================
+         ABOUT PAGE
+         ===================== -->
 
-    <button
-      id="checkButton"
-      onclick="checkPhoto()"
+    <section
+      id="aboutPage"
+      class="page"
     >
-      Check Photo
-    </button>
+
+      <div class="card">
+
+        <h2>
+          ℹ️ About
+        </h2>
+
+        <p>
+          AI Photo Detector एक web app है
+          जो photo को AI-generated या likely
+          real होने के बारे में अनुमान देता है।
+        </p>
+
+        <div class="notice">
+
+          ⚠️ Detection हमेशा 100% accurate नहीं
+          हो सकती। इसे final proof की तरह
+          इस्तेमाल नहीं करना चाहिए।
+
+        </div>
+
+        <br>
+
+        <button
+          class="primary"
+          onclick="showPage('homePage')"
+        >
+          🏠 Home
+        </button>
+
+      </div>
+
+    </section>
 
 
-    <!-- Install Button -->
+    <!-- =====================
+         BOTTOM NAVIGATION
+         ===================== -->
 
-    <button
-      id="installButton"
-      onclick="installApp()"
-    >
-      📲 Install App
-    </button>
+    <nav>
 
+      <button
+        onclick="showPage('homePage')"
+      >
+        🏠 Home
+      </button>
 
-    <!-- Result -->
+      <button
+        onclick="showPage('checkPage')"
+      >
+        📷 Check
+      </button>
 
-    <div id="result">
-      Result यहाँ आएगा
-    </div>
+      <button
+        onclick="showPage('historyPage')"
+      >
+        📜 History
+      </button>
+
+      <button
+        onclick="showPage('aboutPage')"
+      >
+        ℹ️ About
+      </button>
+
+    </nav>
 
   </div>
 
 
   <script>
+
+    /* =====================
+       PAGE CHANGE
+       ===================== */
+
+    function showPage(pageId) {
+
+      const pages =
+        document.querySelectorAll(".page");
+
+      pages.forEach(function(page) {
+
+        page.classList.remove("active");
+
+      });
+
+
+      document
+        .getElementById(pageId)
+        .classList.add("active");
+
+
+      window.scrollTo(0, 0);
+
+    }
+
+
+    /* =====================
+       DARK MODE
+       ===================== */
+
+    function toggleDarkMode() {
+
+      document.body.classList.toggle("dark");
+
+      const dark =
+        document.body.classList.contains("dark");
+
+      localStorage.setItem(
+        "darkMode",
+        dark
+      );
+
+    }
+
+
+    if (
+      localStorage.getItem("darkMode") === "true"
+    ) {
+
+      document.body.classList.add("dark");
+
+    }
+
+
+    /* =====================
+       PHOTO
+       ===================== */
 
     const photo =
       document.getElementById("photo");
@@ -235,45 +695,45 @@
     const checkButton =
       document.getElementById("checkButton");
 
-    const installButton =
-      document.getElementById("installButton");
+    const confidenceBox =
+      document.getElementById("confidenceBox");
 
+    const confidenceBar =
+      document.getElementById("confidenceBar");
 
-    let deferredPrompt = null;
-
-
-    /* =========================
-       PHOTO PREVIEW
-       ========================= */
 
     photo.addEventListener(
       "change",
-      function () {
+      function() {
 
         const file =
           photo.files[0];
 
-        if (file) {
-
-          preview.src =
-            URL.createObjectURL(file);
-
-          preview.style.display =
-            "block";
-
-          result.className = "";
-
-          result.innerText =
-            "Photo तैयार है।";
+        if (!file) {
+          return;
         }
+
+        preview.src =
+          URL.createObjectURL(file);
+
+        preview.style.display =
+          "block";
+
+        result.className = "";
+
+        result.innerText =
+          "Photo तैयार है।";
+
+        confidenceBox.style.display =
+          "none";
 
       }
     );
 
 
-    /* =========================
-       AI PHOTO CHECK
-       ========================= */
+    /* =====================
+       CHECK PHOTO
+       ===================== */
 
     async function checkPhoto() {
 
@@ -290,6 +750,7 @@
           "पहले फोटो upload करें।";
 
         return;
+
       }
 
 
@@ -304,6 +765,10 @@
         "Photo check हो रही है...";
 
 
+      confidenceBox.style.display =
+        "none";
+
+
       const formData =
         new FormData();
 
@@ -315,11 +780,6 @@
 
 
       try {
-
-        /*
-          IMPORTANT:
-          Render server का पूरा address
-        */
 
         const response =
           await fetch(
@@ -353,6 +813,7 @@
             false;
 
           return;
+
         }
 
 
@@ -364,7 +825,9 @@
           data =
             JSON.parse(text);
 
-        } catch (error) {
+        }
+
+        catch (error) {
 
           result.className =
             "uncertain";
@@ -376,12 +839,9 @@
             false;
 
           return;
+
         }
 
-
-        /*
-          AI or Not response
-        */
 
         const aiData =
           data.report &&
@@ -400,6 +860,7 @@
             false;
 
           return;
+
         }
 
 
@@ -417,15 +878,20 @@
           aiData.human.confidence;
 
 
-        /* =========================
-           LIKELY REAL
-           ========================= */
+        let confidence = 0;
+
+        let historyResult = "";
+
+
+        /* REAL */
 
         if (verdict === "human") {
 
+          confidence =
+            humanConfidence * 100;
+
           result.className =
             "real";
-
 
           result.innerHTML =
             "🟢 Likely Real" +
@@ -434,25 +900,27 @@
 
             "Confidence: " +
 
-            (
-              humanConfidence * 100
-            ).toFixed(2) +
+            confidence.toFixed(2) +
 
             "%" +
 
             "</div>";
+
+          historyResult =
+            "🟢 Likely Real";
+
         }
 
 
-        /* =========================
-           LIKELY AI
-           ========================= */
+        /* AI */
 
         else if (verdict === "ai") {
 
+          confidence =
+            aiConfidence * 100;
+
           result.className =
             "ai";
-
 
           result.innerHTML =
             "🔴 Likely AI-generated" +
@@ -461,25 +929,27 @@
 
             "Confidence: " +
 
-            (
-              aiConfidence * 100
-            ).toFixed(2) +
+            confidence.toFixed(2) +
 
             "%" +
 
             "</div>";
+
+          historyResult =
+            "🔴 Likely AI-generated";
+
         }
 
 
-        /* =========================
-           UNCERTAIN
-           ========================= */
+        /* UNCERTAIN */
 
         else {
 
+          confidence =
+            aiConfidence * 100;
+
           result.className =
             "uncertain";
-
 
           result.innerHTML =
             "🟡 Uncertain" +
@@ -488,14 +958,37 @@
 
             "AI confidence: " +
 
-            (
-              aiConfidence * 100
-            ).toFixed(2) +
+            confidence.toFixed(2) +
 
             "%" +
 
             "</div>";
+
+          historyResult =
+            "🟡 Uncertain";
+
         }
+
+
+        /* CONFIDENCE BAR */
+
+        confidenceBox.style.display =
+          "block";
+
+
+        confidenceBar.style.width =
+          Math.min(
+            confidence,
+            100
+          ) + "%";
+
+
+        /* SAVE HISTORY */
+
+        saveHistory(
+          historyResult,
+          confidence
+        );
 
       }
 
@@ -511,10 +1004,10 @@
         result.className =
           "uncertain";
 
-
         result.innerText =
           "Error: " +
           error.message;
+
       }
 
 
@@ -524,20 +1017,209 @@
     }
 
 
-    /* =========================
+    /* =====================
+       HISTORY SAVE
+       ===================== */
+
+    function saveHistory(
+      resultText,
+      confidence
+    ) {
+
+      let history =
+        JSON.parse(
+          localStorage.getItem(
+            "photoHistory"
+          ) || "[]"
+        );
+
+
+      history.unshift({
+
+        result: resultText,
+
+        confidence:
+          confidence.toFixed(2),
+
+        time:
+          new Date().toLocaleString()
+
+      });
+
+
+      /*
+        केवल latest 20 results
+        रखें
+      */
+
+      history =
+        history.slice(0, 20);
+
+
+      localStorage.setItem(
+        "photoHistory",
+        JSON.stringify(history)
+      );
+
+
+      loadHistory();
+
+    }
+
+
+    /* =====================
+       LOAD HISTORY
+       ===================== */
+
+    function loadHistory() {
+
+      const historyList =
+        document.getElementById(
+          "historyList"
+        );
+
+
+      const history =
+        JSON.parse(
+          localStorage.getItem(
+            "photoHistory"
+          ) || "[]"
+        );
+
+
+      if (history.length === 0) {
+
+        historyList.innerHTML =
+          "कोई history नहीं है।";
+
+        return;
+
+      }
+
+
+      historyList.innerHTML =
+        "";
+
+
+      history.forEach(
+        function(item) {
+
+          const div =
+            document.createElement(
+              "div"
+            );
+
+
+          div.className =
+            "history-item";
+
+
+          div.innerHTML =
+
+            "<b>" +
+            item.result +
+            "</b>" +
+
+            "<small>" +
+            "Confidence: " +
+            item.confidence +
+            "%" +
+            "</small>" +
+
+            "<small>" +
+            item.time +
+            "</small>";
+
+
+          historyList.appendChild(
+            div
+          );
+
+        }
+      );
+
+    }
+
+
+    loadHistory();
+
+
+    /* =====================
+       CLEAR HISTORY
+       ===================== */
+
+    function clearHistory() {
+
+      const confirmDelete =
+        confirm(
+          "क्या आप पूरी history हटाना चाहते हैं?"
+        );
+
+
+      if (!confirmDelete) {
+        return;
+      }
+
+
+      localStorage.removeItem(
+        "photoHistory"
+      );
+
+
+      loadHistory();
+
+    }
+
+
+    /* =====================
+       CLEAR PHOTO
+       ===================== */
+
+    function clearPhoto() {
+
+      photo.value =
+        "";
+
+      preview.src =
+        "";
+
+      preview.style.display =
+        "none";
+
+      result.className =
+        "";
+
+      result.innerText =
+        "Result यहाँ आएगा";
+
+      confidenceBox.style.display =
+        "none";
+
+    }
+
+
+    /* =====================
        PWA INSTALL
-       ========================= */
+       ===================== */
+
+    let deferredPrompt =
+      null;
+
 
     window.addEventListener(
       "beforeinstallprompt",
-      function (event) {
+      function(event) {
 
         event.preventDefault();
 
         deferredPrompt =
           event;
 
-        installButton.style.display =
+        document
+          .getElementById(
+            "installButton"
+          )
+          .style.display =
           "inline-block";
 
       }
@@ -549,10 +1231,11 @@
       if (!deferredPrompt) {
 
         alert(
-          "Install option अभी उपलब्ध नहीं है। Chrome के menu ⋮ से 'Install app' या 'Add to Home screen' देखें।"
+          "Install option अभी उपलब्ध नहीं है। Chrome menu ⋮ में 'Install app' या 'Add to Home screen' देखें।"
         );
 
         return;
+
       }
 
 
@@ -573,26 +1256,26 @@
         null;
 
 
-      installButton.style.display =
+      document
+        .getElementById(
+          "installButton"
+        )
+        .style.display =
         "none";
 
     }
 
 
-    /* =========================
-       APP INSTALLED
-       ========================= */
-
     window.addEventListener(
       "appinstalled",
-      function () {
+      function() {
 
-        installButton.style.display =
+        document
+          .getElementById(
+            "installButton"
+          )
+          .style.display =
           "none";
-
-        console.log(
-          "App installed"
-        );
 
       }
     );
@@ -601,4 +1284,4 @@
 
 </body>
 
-</html>
+  </html>
