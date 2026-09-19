@@ -55,12 +55,37 @@
       cursor: pointer;
     }
 
+    button:disabled {
+      background-color: gray;
+      cursor: not-allowed;
+    }
+
     #result {
       margin-top: 15px;
-      padding: 10px;
+      padding: 15px;
       border-radius: 10px;
       background-color: #eeeeee;
-      word-break: break-word;
+      font-size: 18px;
+    }
+
+    .real {
+      background-color: #d9ffd9;
+      color: green;
+    }
+
+    .ai {
+      background-color: #ffd9d9;
+      color: red;
+    }
+
+    .uncertain {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    .confidence {
+      font-size: 15px;
+      margin-top: 8px;
     }
   </style>
 </head>
@@ -79,7 +104,7 @@
 
     <img id="preview" alt="Photo Preview">
 
-    <button onclick="checkPhoto()">
+    <button id="checkButton" onclick="checkPhoto()">
       Check Photo
     </button>
 
@@ -93,82 +118,164 @@
     const photo = document.getElementById("photo");
     const preview = document.getElementById("preview");
     const result = document.getElementById("result");
+    const checkButton = document.getElementById("checkButton");
 
     photo.addEventListener("change", function () {
+
       const file = photo.files[0];
 
       if (file) {
+
         preview.src = URL.createObjectURL(file);
+
         preview.style.display = "block";
+
+        result.className = "";
+
         result.innerText = "Photo तैयार है।";
       }
     });
+
 
     async function checkPhoto() {
 
       const file = photo.files[0];
 
       if (!file) {
+
+        result.className = "uncertain";
+
         result.innerText = "पहले फोटो upload करें।";
+
         return;
       }
 
-      result.innerText = "Photo server पर भेजी जा रही है...";
+      checkButton.disabled = true;
+
+      result.className = "";
+
+      result.innerText = "Photo check हो रही है...";
+
 
       const formData = new FormData();
 
       formData.append("photo", file);
 
+
       try {
 
         const response = await fetch("/check", {
+
           method: "POST",
+
           body: formData
+
         });
+
 
         const text = await response.text();
 
-        console.log("Server status:", response.status);
-        console.log("Server response:", text);
 
         if (!response.ok) {
+
+          result.className = "uncertain";
+
           result.innerText =
-            "Server Error (" +
-            response.status +
-            "): " +
-            text;
+            "Error: " + text;
+
+          checkButton.disabled = false;
+
           return;
         }
 
-        try {
 
-          const data = JSON.parse(text);
+        const data = JSON.parse(text);
 
-          if (data.message) {
-            result.innerText = data.message;
-          } 
-          else if (data.error) {
-            result.innerText = data.error;
-          } 
-          else {
-            result.innerText = text;
-          }
 
-        } catch (jsonError) {
+        const aiData =
+          data.report &&
+          data.report.ai_generated;
+
+
+        if (!aiData) {
+
+          result.className = "uncertain";
 
           result.innerText =
-            "Server response: " + text;
+            "Result समझ नहीं आया।";
+
+          checkButton.disabled = false;
+
+          return;
+        }
+
+
+        const verdict = aiData.verdict;
+
+        const aiConfidence =
+          aiData.ai.confidence;
+
+        const humanConfidence =
+          aiData.human.confidence;
+
+
+        if (verdict === "human") {
+
+          result.className = "real";
+
+          result.innerHTML =
+            "🟢 Likely Real" +
+            '<div class="confidence">' +
+            "Confidence: " +
+            (humanConfidence * 100).toFixed(2) +
+            "%" +
+            "</div>";
 
         }
 
-      } catch (error) {
+        else if (verdict === "ai") {
 
-        console.error("Connection error:", error);
+          result.className = "ai";
 
-        result.innerText =
-          "Connection Error: " + error.message;
+          result.innerHTML =
+            "🔴 Likely AI-generated" +
+            '<div class="confidence">' +
+            "Confidence: " +
+            (aiConfidence * 100).toFixed(2) +
+            "%" +
+            "</div>";
+
+        }
+
+        else {
+
+          result.className = "uncertain";
+
+          result.innerHTML =
+            "🟡 Uncertain" +
+            '<div class="confidence">' +
+            "AI confidence: " +
+            (aiConfidence * 100).toFixed(2) +
+            "%" +
+            "</div>";
+
+        }
 
       }
+
+      catch (error) {
+
+        console.error(error);
+
+        result.className = "uncertain";
+
+        result.innerText =
+          "Error: " + error.message;
+
+      }
+
+
+      checkButton.disabled = false;
     }
   </script>
 
