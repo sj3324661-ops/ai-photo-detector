@@ -7,8 +7,12 @@
 
   <title>AI Photo Detector</title>
 
-  <!-- App Logo -->
+  <!-- Logo -->
   <link rel="icon" type="image/png" href="/icon.png">
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0000ff">
 
   <style>
     body {
@@ -48,7 +52,7 @@
       width: 100%;
     }
 
-    img#preview {
+    #preview {
       max-width: 100%;
       max-height: 250px;
       border-radius: 10px;
@@ -64,11 +68,17 @@
       border-radius: 10px;
       font-size: 16px;
       cursor: pointer;
+      margin: 5px;
     }
 
     button:disabled {
       background-color: gray;
       cursor: not-allowed;
+    }
+
+    #installButton {
+      display: none;
+      background-color: green;
     }
 
     #result {
@@ -105,7 +115,7 @@
 
   <div class="card">
 
-    <!-- Logo -->
+    <!-- App Logo -->
     <img
       class="logo"
       src="/icon.png"
@@ -125,11 +135,20 @@
       alt="Photo Preview"
     >
 
+    <br>
+
     <button
       id="checkButton"
       onclick="checkPhoto()"
     >
       Check Photo
+    </button>
+
+    <button
+      id="installButton"
+      onclick="installApp()"
+    >
+      📲 Install App
     </button>
 
     <div id="result">
@@ -138,12 +157,18 @@
 
   </div>
 
+
   <script>
     const photo = document.getElementById("photo");
     const preview = document.getElementById("preview");
     const result = document.getElementById("result");
     const checkButton = document.getElementById("checkButton");
+    const installButton = document.getElementById("installButton");
 
+    let deferredPrompt = null;
+
+
+    /* Photo Preview */
 
     photo.addEventListener("change", function () {
 
@@ -161,6 +186,8 @@
       }
     });
 
+
+    /* AI Photo Check */
 
     async function checkPhoto() {
 
@@ -308,8 +335,67 @@
 
       checkButton.disabled = false;
     }
+
+
+    /* Install App */
+
+    window.addEventListener(
+      "beforeinstallprompt",
+      function (event) {
+
+        event.preventDefault();
+
+        deferredPrompt = event;
+
+        installButton.style.display = "inline-block";
+      }
+    );
+
+
+    async function installApp() {
+
+      if (!deferredPrompt) {
+
+        alert(
+          "Install option अभी उपलब्ध नहीं है। Chrome के menu ⋮ से 'Install app' या 'Add to Home screen' देखें।"
+        );
+
+        return;
+      }
+
+
+      deferredPrompt.prompt();
+
+
+      const result =
+        await deferredPrompt.userChoice;
+
+
+      console.log(
+        "Install result:",
+        result.outcome
+      );
+
+
+      deferredPrompt = null;
+
+      installButton.style.display = "none";
+    }
+
+
+    /* App Installed */
+
+    window.addEventListener(
+      "appinstalled",
+      function () {
+
+        installButton.style.display = "none";
+
+        console.log("App installed");
+      }
+    );
   </script>
 
 </body>
 
-  </html>
+</html>
