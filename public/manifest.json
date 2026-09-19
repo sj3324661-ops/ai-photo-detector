@@ -1,0 +1,16 @@
+{
+  "name": "AI Photo Detector",
+  "short_name": "AI Detector",
+  "description": "Check whether a photo is likely AI-generated or real.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#add8e6",
+  "theme_color": "#0000ff",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
