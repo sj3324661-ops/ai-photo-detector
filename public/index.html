@@ -1,42 +1,47 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="hi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>AI Photo Detector</title>
 
   <style>
     body {
       background-color: lightblue;
-      font-family: Arial;
-      text-align: center;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
     }
 
     .card {
       background-color: white;
-      width: 85%;
-      margin: 40px auto;
-      padding: 25px;
-      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      box-sizing: border-box;
     }
 
     h1 {
       color: red;
-      font-size: 32px;
     }
 
-    p {
-      color: green;
-    }
-
-    #preview {
+    input {
+      margin: 15px 0;
       width: 100%;
-      max-width: 300px;
-      margin-top: 20px;
-      border-radius: 15px;
+    }
+
+    img {
+      max-width: 100%;
+      max-height: 250px;
+      border-radius: 10px;
       display: none;
+      margin: 15px auto;
     }
 
     button {
@@ -45,17 +50,15 @@
       border: none;
       padding: 12px 20px;
       border-radius: 10px;
-      margin-top: 20px;
       font-size: 16px;
+      cursor: pointer;
     }
 
     #result {
-      margin-top: 20px;
-      padding: 15px;
+      margin-top: 15px;
+      padding: 10px;
       border-radius: 10px;
       background-color: #eeeeee;
-      font-size: 18px;
-      display: none;
     }
   </style>
 </head>
@@ -66,17 +69,17 @@
 
     <h1>AI Photo Detector</h1>
 
-    <p>Photo upload करके check करें</p>
+    <input
+      type="file"
+      id="photo"
+      accept="image/*"
+    >
 
-    <input type="file" id="photo" accept="image/*">
+    <img id="preview" alt="Photo Preview">
 
-    <br>
-
-    <img id="preview">
-
-    <br>
-
-    <button id="checkButton">Check Photo</button>
+    <button onclick="checkPhoto()">
+      Check Photo
+    </button>
 
     <div id="result">
       Result यहाँ आएगा
@@ -85,40 +88,48 @@
   </div>
 
   <script>
-
     const photo = document.getElementById("photo");
     const preview = document.getElementById("preview");
-    const checkButton = document.getElementById("checkButton");
     const result = document.getElementById("result");
 
-    photo.addEventListener("change", function() {
-
+    photo.addEventListener("change", function () {
       const file = photo.files[0];
 
       if (file) {
         preview.src = URL.createObjectURL(file);
         preview.style.display = "block";
-
-        result.style.display = "none";
+        result.innerText = "Photo तैयार है।";
       }
-
     });
 
-    checkButton.addEventListener("click", function() {
+    async function checkPhoto() {
+      const file = photo.files[0];
 
-      if (!photo.files[0]) {
+      if (!file) {
         result.innerText = "पहले फोटो upload करें।";
-        result.style.display = "block";
         return;
       }
 
-      result.innerText = "Photo check हो रही है...";
-      result.style.display = "block";
+      result.innerText = "Photo server पर भेजी जा रही है...";
 
-    });
+      const formData = new FormData();
+      formData.append("photo", file);
 
+      try {
+        const response = await fetch("/check", {
+          method: "POST",
+          body: formData
+        });
+
+        const data = await response.json();
+
+        result.innerText = data.message || data.error;
+
+      } catch (error) {
+        result.innerText = "Server से connection नहीं हुआ।";
+      }
+    }
   </script>
 
 </body>
-
 </html>
