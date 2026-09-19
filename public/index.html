@@ -7,6 +7,9 @@
 
   <title>AI Photo Detector</title>
 
+  <!-- App Logo -->
+  <link rel="icon" type="image/png" href="/icon.png">
+
   <style>
     body {
       background-color: lightblue;
@@ -28,6 +31,14 @@
       box-sizing: border-box;
     }
 
+    .logo {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+
     h1 {
       color: red;
     }
@@ -37,7 +48,7 @@
       width: 100%;
     }
 
-    img {
+    img#preview {
       max-width: 100%;
       max-height: 250px;
       border-radius: 10px;
@@ -94,6 +105,13 @@
 
   <div class="card">
 
+    <!-- Logo -->
+    <img
+      class="logo"
+      src="/icon.png"
+      alt="AI Photo Detector Logo"
+    >
+
     <h1>AI Photo Detector</h1>
 
     <input
@@ -102,9 +120,15 @@
       accept="image/*"
     >
 
-    <img id="preview" alt="Photo Preview">
+    <img
+      id="preview"
+      alt="Photo Preview"
+    >
 
-    <button id="checkButton" onclick="checkPhoto()">
+    <button
+      id="checkButton"
+      onclick="checkPhoto()"
+    >
       Check Photo
     </button>
 
@@ -119,6 +143,7 @@
     const preview = document.getElementById("preview");
     const result = document.getElementById("result");
     const checkButton = document.getElementById("checkButton");
+
 
     photo.addEventListener("change", function () {
 
@@ -145,16 +170,19 @@
 
         result.className = "uncertain";
 
-        result.innerText = "पहले फोटो upload करें।";
+        result.innerText =
+          "पहले फोटो upload करें।";
 
         return;
       }
+
 
       checkButton.disabled = true;
 
       result.className = "";
 
-      result.innerText = "Photo check हो रही है...";
+      result.innerText =
+        "Photo check हो रही है...";
 
 
       const formData = new FormData();
@@ -212,8 +240,10 @@
 
         const verdict = aiData.verdict;
 
+
         const aiConfidence =
           aiData.ai.confidence;
+
 
         const humanConfidence =
           aiData.human.confidence;
@@ -233,6 +263,7 @@
 
         }
 
+
         else if (verdict === "ai") {
 
           result.className = "ai";
@@ -247,6 +278,7 @@
 
         }
 
+
         else {
 
           result.className = "uncertain";
@@ -258,10 +290,10 @@
             (aiConfidence * 100).toFixed(2) +
             "%" +
             "</div>";
-
         }
 
       }
+
 
       catch (error) {
 
@@ -271,7 +303,6 @@
 
         result.innerText =
           "Error: " + error.message;
-
       }
 
 
@@ -281,4 +312,4 @@
 
 </body>
 
-</html>
+  </html>
